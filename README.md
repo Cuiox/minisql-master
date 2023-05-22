@@ -37,11 +37,11 @@
 ```bash
 mkdir build
 cd build
-cmake ..
-make -j
+sudo cmake ..
+sudo make -j
 ```
 若不涉及到`CMakeLists`相关文件的变动且没有新增或删除`.cpp`代码（通俗来说，就是只是对现有代码做了修改）
-则无需重新执行`cmake..`命令，直接执行`make -j`编译即可。
+则无需重新执行`cmake ..`命令，直接执行`make -j`编译即可。
 
 默认以`debug`模式进行编译，如果你需要使用`release`模式进行编译：
 ```bash
