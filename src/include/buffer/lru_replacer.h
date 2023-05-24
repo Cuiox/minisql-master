@@ -38,8 +38,8 @@ public:
 private:
   // add your own private member variables here
   size_t num_pages;
-  std::list<frame_id_t>lru_list_;
-  std::unordered_map<frame_id_t,std::list<frame_id_t>::iterator> hashmap;
+  std::list<frame_id_t> lru_list_;
+  std::unordered_map<frame_id_t, std::list<frame_id_t>::iterator> hashmap;
 };
 
 #endif  // MINISQL_LRU_REPLACER_H
