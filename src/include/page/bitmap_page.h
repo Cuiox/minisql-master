@@ -45,9 +45,9 @@ class BitmapPage {
 
  private:
   /** The space occupied by all members of the class should be equal to the PageSize */
-  [[maybe_unused]] uint32_t page_allocated_;
-  [[maybe_unused]] uint32_t next_free_page_;
-  [[maybe_unused]] unsigned char bytes[MAX_CHARS];
+  [[maybe_unused]] uint32_t page_allocated_; // 当前已经分配的页的数量
+  [[maybe_unused]] uint32_t next_free_page_; // 下一个空闲的数据页
+  [[maybe_unused]] unsigned char bytes[MAX_CHARS]; // bytes[i] 大小 8 bit
 };
 
 #endif  // MINISQL_BITMAP_PAGE_H

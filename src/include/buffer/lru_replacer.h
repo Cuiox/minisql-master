@@ -5,7 +5,7 @@
 #include <mutex>
 #include <unordered_set>
 #include <vector>
-
+#include <unordered_map>
 #include "buffer/replacer.h"
 #include "common/config.h"
 
@@ -15,7 +15,7 @@ using namespace std;
  * LRUReplacer implements the Least Recently Used replacement policy.
  */
 class LRUReplacer : public Replacer {
- public:
+public:
   /**
    * Create a new LRUReplacer.
    * @param num_pages the maximum number of pages the LRUReplacer will be required to store
@@ -37,6 +37,9 @@ class LRUReplacer : public Replacer {
 
 private:
   // add your own private member variables here
+  size_t num_pages;
+  std::list<frame_id_t>lru_list_;
+  std::unordered_map<frame_id_t,std::list<frame_id_t>::iterator> hashmap;
 };
 
 #endif  // MINISQL_LRU_REPLACER_H
