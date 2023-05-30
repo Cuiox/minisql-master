@@ -47,7 +47,7 @@ class TableHeap {
    * @param[in] txn Transaction performing the update
    * @return true is update is successful.
    */
-  bool UpdateTuple(const Row &row, const RowId &rid, Transaction *txn);
+  bool UpdateTuple(Row &row, const RowId &rid, Transaction *txn);
 
   /**
    * Called on Commit/Abort to actually delete a tuple or rollback an insert.
@@ -103,6 +103,8 @@ class TableHeap {
    */
   inline page_id_t GetFirstPageId() const { return first_page_id_; }
 
+  inline page_id_t GetCurrentPageId() const { return current_page_id_; }
+
 private:
   /**
    * create table heap and initialize first page
@@ -113,13 +115,21 @@ private:
           schema_(schema),
           log_manager_(log_manager),
           lock_manager_(lock_manager) {
-    ASSERT(false, "Not implemented yet.");
+    //ASSERT(false, "Not implemented yet.");
+    TablePage* first_page = reinterpret_cast<TablePage*>(buffer_pool_manager_->NewPage(first_page_id_));
+    first_page->Init(first_page_id_, INVALID_PAGE_ID, log_manager_, txn);
+    buffer_pool_manager_->UnpinPage(first_page_id_, true);
+    current_page_id_ = first_page_id_;
   };
 
+  /**
+   * load existing table heap by first_page_id
+   */
   explicit TableHeap(BufferPoolManager *buffer_pool_manager, page_id_t first_page_id, Schema *schema,
                      LogManager *log_manager, LockManager *lock_manager)
       : buffer_pool_manager_(buffer_pool_manager),
         first_page_id_(first_page_id),
+        current_page_id_(first_page_id),
         schema_(schema),
         log_manager_(log_manager),
         lock_manager_(lock_manager) {}
@@ -127,6 +137,7 @@ private:
  private:
   BufferPoolManager *buffer_pool_manager_;
   page_id_t first_page_id_;
+  page_id_t current_page_id_;
   Schema *schema_;
   [[maybe_unused]] LogManager *log_manager_;
   [[maybe_unused]] LockManager *lock_manager_;
