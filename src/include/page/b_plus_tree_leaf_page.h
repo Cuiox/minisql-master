@@ -65,6 +65,8 @@ class BPlusTreeLeafPage : public BPlusTreePage {
 
   int RemoveAndDeleteRecord(const GenericKey *key, const KeyManager &comparator);
 
+  bool RemoveByIndex(int index);
+
   // Split and Merge utility methods
   void MoveHalfTo(BPlusTreeLeafPage *recipient);
 
@@ -83,7 +85,7 @@ class BPlusTreeLeafPage : public BPlusTreePage {
 
   page_id_t next_page_id_{INVALID_PAGE_ID};
 
-  char data_[PAGE_SIZE - LEAF_PAGE_HEADER_SIZE];
+  char data_[PAGE_SIZE - LEAF_PAGE_HEADER_SIZE]; // 该 Page 剩余的部分用来存键值对 pair<KeyType, ValueType>
 };
 
 using LeafPage = BPlusTreeLeafPage;

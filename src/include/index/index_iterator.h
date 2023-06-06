@@ -28,10 +28,11 @@ class IndexIterator {
 
  private:
   page_id_t current_page_id{INVALID_PAGE_ID};
-  LeafPage *page{nullptr};
+  Page *page{nullptr};
   int item_index{0};
   BufferPoolManager *buffer_pool_manager{nullptr};
   // add your own private member variables here
+  LeafPage *node;
 };
 
 #endif  // MINISQL_INDEX_ITERATOR_H

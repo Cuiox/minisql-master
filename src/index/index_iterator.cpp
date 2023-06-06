@@ -7,7 +7,8 @@ IndexIterator::IndexIterator() = default;
 
 IndexIterator::IndexIterator(page_id_t page_id, BufferPoolManager *bpm, int index)
     : current_page_id(page_id), item_index(index), buffer_pool_manager(bpm) {
-  page = reinterpret_cast<LeafPage *>(buffer_pool_manager->FetchPage(current_page_id));
+  page = reinterpret_cast<Page *>(buffer_pool_manager->FetchPage(current_page_id));
+  node = reinterpret_cast<LeafPage *>(page->GetData());
 }
 
 IndexIterator::~IndexIterator() {
@@ -16,11 +17,20 @@ IndexIterator::~IndexIterator() {
 }
 
 std::pair<GenericKey *, RowId> IndexIterator::operator*() {
-  ASSERT(false, "Not implemented yet.");
+	return node->GetItem(item_index);
 }
 
 IndexIterator &IndexIterator::operator++() {
-  ASSERT(false, "Not implemented yet.");
+	item_index++;
+	if (item_index == node->GetSize() && node->GetNextPageId() != INVALID_PAGE_ID) {
+		// 跳到下一个 node
+		Page *next_page = buffer_pool_manager->FetchPage(node->GetNextPageId());
+		buffer_pool_manager->UnpinPage(page->GetPageId(), false);
+		page = next_page;
+		node = reinterpret_cast<LeafPage *>(page->GetData());
+		item_index = 0;
+	}
+	return *this;
 }
 
 bool IndexIterator::operator==(const IndexIterator &itr) const {
